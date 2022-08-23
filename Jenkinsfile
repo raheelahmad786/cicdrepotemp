@@ -1,6 +1,6 @@
 pipeline {
     environment {
-        registry = 'jenk_deneme/ml_model'
+        registry = 'cicdrepotemp/ml_model'
         dockerImage = ''
     }
     agent any
