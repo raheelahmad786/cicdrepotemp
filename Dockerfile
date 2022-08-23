@@ -1,6 +1,5 @@
 #I specify the parent base image which is the python version 3.7
 FROM python:3.7
-
 # This prevents Python from writing out pyc files
 ENV PYTHONDONTWRITEBYTECODE 1
 # This keeps Python from buffering stdin/stdout
@@ -17,11 +16,14 @@ RUN pip install --no-cache-dir --upgrade pip
 # set work directory
 WORKDIR /src/app
 
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
 # copy requirements.txt
 COPY ./requirements.txt /src/app/requirements.txt
 
 # install project requirements
-RUN pip install --root-user-action=ignore --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # copy project
 COPY . .
