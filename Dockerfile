@@ -21,7 +21,7 @@ WORKDIR /src/app
 COPY ./requirements.txt /src/app/requirements.txt
 
 # install project requirements
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --root-user-action=ignore --no-cache-dir -r requirements.txt
 
 # copy project
 COPY . .
