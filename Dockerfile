@@ -1,27 +1,40 @@
-#Base Image node:12.18.4-alpine
-FROM node:12.18.4-alpine
+#I specify the parent base image which is the python version 3.7
+FROM python:3.7
 
+MAINTAINER devops-seda <sedaatalay96@gmail.com>
 
-#Set working directory to /app
-WORKDIR /app
+# This prevents Python from writing out pyc files
+ENV PYTHONDONTWRITEBYTECODE 1
+# This keeps Python from buffering stdin/stdout
+ENV PYTHONUNBUFFERED 1
 
+# install system dependencies
+RUN apt-get update \
+    && apt-get -y install gcc make \
+    && rm -rf /var/lib/apt/lists/*
 
-#Set PATH /app/node_modules/.bin
-ENV PATH /app/node_modules/.bin:$PATH
+# install dependencies
+RUN pip install --no-cache-dir --upgrade pip
 
+# set work directory
+WORKDIR /src/app
 
-#Copy package.json in the image
-COPY package.json ./
+# copy requirements.txt
+COPY ./requirements.txt /src/app/requirements.txt
 
+# install project requirements
+RUN pip install --no-cache-dir -r requirements.txt
 
-#Run npm install command
-RUN npm install
+# copy project
+COPY . .
 
+# set work directory
+WORKDIR /src/app
 
-#Copy the app
-COPY . ./
+# set app port
+EXPOSE 9090
 
-EXPOSE 3000
+ENTRYPOINT [ "python" ] 
 
-#Start the app
-CMD ["node", "./src/server.js"]
+# Run app.py when the container launches
+CMD [ "app.py","run","--host","0.0.0.0"] 
