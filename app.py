@@ -16,7 +16,7 @@ model_path = 'finalized_model.sav'
 def index_page():
     return_data = {
         "error" : "0",
-        "message" : "Successful"
+        "message" : "Successfull"
     }
     return flask_app.response_class(response=json.dumps(return_data), mimetype='application/json')
 
