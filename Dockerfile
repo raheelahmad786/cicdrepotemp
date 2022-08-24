@@ -1,40 +1,15 @@
-#I specify the parent base image which is the python version 3.7
-FROM python:3.7
-# This prevents Python from writing out pyc files
-ENV PYTHONDONTWRITEBYTECODE 1
-# This keeps Python from buffering stdin/stdout
-ENV PYTHONUNBUFFERED 1
+FROM python:3-alpine
 
-# install system dependencies
-RUN apt-get update \
-    && apt-get -y install gcc make \
-    && rm -rf /var/lib/apt/lists/*
+# Create app directory
+WORKDIR /app
 
-# install dependencies
-RUN pip install --no-cache-dir --upgrade pip
+# Install app dependencies
+COPY requirements.txt ./
 
-# set work directory
-WORKDIR /src/app
+RUN pip install -r requirements.txt
 
-RUN python -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
-
-# copy requirements.txt
-COPY ./requirements.txt /src/app/requirements.txt
-
-# install project requirements
-RUN pip install --no-cache-dir -r requirements.txt
-
-# copy project
+# Bundle app source
 COPY . .
 
-# set work directory
-WORKDIR /src/app
-
-# set app port
-EXPOSE 9090
-
-ENTRYPOINT [ "python" ] 
-
-# Run app.py when the container launches
-CMD [ "app.py","run","--host","0.0.0.0"] 
+EXPOSE 5000
+CMD [ "flask", "run","--host","0.0.0.0","--port","5000"]:
