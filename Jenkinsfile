@@ -28,6 +28,13 @@ pipeline {
             steps { 
                 sh "docker rmi $registry:$BUILD_NUMBER" 
             }
+        }
+        stage('Deployed') { 
+            steps { 
+                sh "docker stop py"
+                sh "docker rm py"
+                sh "docker run -dt --name py -p 5000:5000 $registry:$BUILD_NUMBER" 
+            }
         } 
 
     }
