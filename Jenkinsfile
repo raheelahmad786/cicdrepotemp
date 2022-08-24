@@ -31,8 +31,8 @@ pipeline {
         }
         stage('Deployed') { 
             steps { 
-                sh "docker stop py"
-                sh "docker rm py"
+                sh 'docker ps -f name=py -q | xargs --no-run-if-empty docker container stop'
+                sh 'docker container ls -a -fname=py -q | xargs -r docker container rm'
                 sh "docker run -dt --name py -p 5000:5000 $registry:$BUILD_NUMBER" 
             }
         } 
