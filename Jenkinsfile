@@ -29,7 +29,7 @@ pipeline {
                 sh "docker rmi $registry:$BUILD_NUMBER" 
             }
         }
-        stage('Deployed') { 
+        stage('Pull Image from Docker Hub & Deploy') { 
             steps { 
                 sh 'docker ps -f name=py -q | xargs --no-run-if-empty docker container stop'
                 sh 'docker container ls -a -fname=py -q | xargs -r docker container rm'
